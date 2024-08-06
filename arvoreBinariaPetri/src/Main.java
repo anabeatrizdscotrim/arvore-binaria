@@ -8,6 +8,16 @@ public class Main {
         arvoreBinaria.inserir(37);
         arvoreBinaria.inserir(-3);
         arvoreBinaria.inserir(12);
+
+        System.out.println(" ordem antes da remoção");
         arvoreBinaria.emOrdem(arvoreBinaria.getRaiz());
+        System.out.println();
+
+        System.out.println("Remover 87");
+        arvoreBinaria.remover(72);
+
+        System.out.println("ordem depois da remoção");
+        arvoreBinaria.emOrdem(arvoreBinaria.getRaiz());
+        System.out.println();
     }
 }

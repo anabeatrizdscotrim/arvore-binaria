@@ -60,4 +60,58 @@ public class ArvoreBinaria {
     public No getRaiz() {
         return this.raiz;
     }
+
+    public No removerAtual(No atual) {
+
+        /* no folha*/
+        if(atual.getEsq() == null) {
+            return atual.getDir();
+        } else if (atual.getDir()== null){ /*No com 1 filho só*/
+            return atual.getEsq();
+        }else{
+            No paiSucessor = atual;  /*No com 2 filhos */
+            No sucessor = atual.getDir();
+
+            while(sucessor.getEsq()!= null){
+                paiSucessor = sucessor;
+                sucessor = sucessor.getEsq();
+            }
+            if (sucessor != atual.getDir()){
+                paiSucessor.setEsq(sucessor.getDir());
+                sucessor.setDir(atual.getDir());
+            }
+
+            sucessor.setEsq(atual.getEsq());
+            return sucessor;
+        }
+    }
+
+    public boolean remover(int valor) {
+        No atual = this.raiz;
+        No pai = null;
+
+        while (atual != null) {
+            if (valor == atual.getValor()) {
+                if (atual == this.raiz) {
+                    this.raiz = removerAtual(atual);
+                } else {
+                    if (pai.getDir() == atual) {
+                        pai.setDir(removerAtual(atual));
+                    } else {
+                        pai.setEsq(removerAtual(atual));
+                    }
+                }
+                return true;
+            }
+
+            pai = atual;
+            if (valor > atual.getValor()) {
+                atual = atual.getDir();
+            } else {
+                atual = atual.getEsq();
+            }
+        }
+
+        return false;
+    }
 }
