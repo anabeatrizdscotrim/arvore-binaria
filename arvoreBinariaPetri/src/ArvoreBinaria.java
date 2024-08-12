@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class ArvoreBinaria {
     private No raiz;
 
@@ -81,14 +84,14 @@ public class ArvoreBinaria {
 
         // se for nó folha
         if (atual.getEsq() == null && atual.getDir() == null) {
-            if(pai != null){ //se o no tiver um pai
-                if(pai.getEsq() == atual){ //Se o nó for o filho esquerdo do pai
-                    pai.setEsq(null); //Se for, o ponteiro para o filho esquerdo do pai é definido como nulo, "desconectando" o nó folha da árvore
+            if(pai != null){
+                if(pai.getEsq() == atual){
+                    pai.setEsq(null);
                 } else {
                     pai.setDir(null);
                 }
-            } else { //Se o nó não tiver pai
-                raiz = null; //se for a raiz, define ela como nula
+            } else {
+                raiz = null;
             }
         }
 
@@ -115,7 +118,7 @@ public class ArvoreBinaria {
             }
         }
 
-        // se for no com 2 filhos
+        // se for com 2 filhos
         else {
             No sucessor = atual.getDir();
             No paiSucessor = atual;
@@ -126,14 +129,79 @@ public class ArvoreBinaria {
 
             atual.setValor(sucessor.getValor());
 
-            if (paiSucessor.getEsq() == sucessor) {
+            if (paiSucessor == atual) { //sucessor é o filho direito de atual
+                atual.setDir(sucessor.getDir());
+            } else { // Sucessor não é o filho direito de atual
                 paiSucessor.setEsq(sucessor.getDir());
-            } else {
-                paiSucessor.setDir(null);
             }
         }
         return atual;
-
     }
+
+
+    public void mostrarArvore() {
+        if (raiz == null) {
+            System.out.println("Árvore vazia.");
+            return;
+        }
+
+        Queue<No> fila = new LinkedList<>();
+        fila.add(raiz);
+
+        int altura = altura(raiz);
+        int maxNiveis = altura + 2;
+
+        int espacosEntreNos = (int) Math.pow(2, maxNiveis) - 1;
+        int espacosEntreNiveis = espacosEntreNos / 2;
+
+        while (!fila.isEmpty()) {
+            int nosNesseNivel = fila.size();
+            boolean todosNull = true;
+
+            for (int i = 0; i < nosNesseNivel; i++) {
+                No atual = fila.poll();
+
+
+                printEspacos(espacosEntreNiveis);
+
+                if (atual != null) {
+                    System.out.print(atual.getValor());
+                    fila.add(atual.getEsq());
+                    fila.add(atual.getDir());
+                    todosNull = false;
+                } else {
+                    System.out.print(" ");
+                    fila.add(null);
+                    fila.add(null);
+                }
+
+
+                printEspacos(espacosEntreNos);
+            }
+
+            if (todosNull) {
+                break;
+            }
+
+            System.out.println();
+
+            espacosEntreNiveis /= 2;
+            espacosEntreNos /= 2;
+        }
+    }
+
+    private void printEspacos(int count) {
+        for (int i = 0; i < count; i++) {
+            System.out.print(" ");
+        }
+    }
+
+    private int altura(No no) {
+        if (no == null) {
+            return -1;
+        }
+        return 1 + Math.max(altura(no.getEsq()), altura(no.getDir()));
+    }
+
 
 }
