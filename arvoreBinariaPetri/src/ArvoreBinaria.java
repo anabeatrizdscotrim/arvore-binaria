@@ -5,6 +5,10 @@ public class ArvoreBinaria {
         this.raiz = null;
     }
 
+    public No getRaiz() {
+        return this.raiz;
+    }
+
     public No inserir(int valor) {
         No novoNo = new No(valor);
         if (this.raiz == null) {
@@ -31,7 +35,7 @@ public class ArvoreBinaria {
     }
 
     public void preOrdem(No no) {
-        if(no == null) {
+        if (no == null) {
             return;
         }
         System.out.println(no.getValor());
@@ -40,7 +44,7 @@ public class ArvoreBinaria {
     }
 
     public void emOrdem(No no) {
-        if(no == null) {
+        if (no == null) {
             return;
         }
         emOrdem(no.getEsq());
@@ -49,7 +53,7 @@ public class ArvoreBinaria {
     }
 
     public void posOrdem(No no) {
-        if(no == null) {
+        if (no == null) {
             return;
         }
         posOrdem(no.getEsq());
@@ -57,61 +61,79 @@ public class ArvoreBinaria {
         System.out.println(no.getValor());
     }
 
-    public No getRaiz() {
-        return this.raiz;
-    }
+    public No remover(int valor) {
+        No atual = raiz;
+        No pai = null;
 
-    public No removerAtual(No atual) {
+        while(atual != null && atual.getValor() != valor) {
+            pai = atual;
+            if (valor < atual.getValor()) {
+                atual = atual.getEsq();
+            } else {
+                atual = atual.getDir();
+            }
 
-        /* no folha*/
-        if(atual.getEsq() == null) {
-            return atual.getDir();
-        } else if (atual.getDir()== null){ /*No com 1 filho só*/
-            return atual.getEsq();
-        }else{
-            No paiSucessor = atual;  /*No com 2 filhos */
+            if (atual == null) {
+                return null; //nó não existe, retorna nulo
+            }
+        }
+        // se existir o no
+
+        // se for nó folha
+        if (atual.getEsq() == null && atual.getDir() == null) {
+            if(pai != null){ //se o no tiver um pai
+                if(pai.getEsq() == atual){ //Se o nó for o filho esquerdo do pai
+                    pai.setEsq(null); //Se for, o ponteiro para o filho esquerdo do pai é definido como nulo, "desconectando" o nó folha da árvore
+                } else {
+                    pai.setDir(null);
+                }
+            } else { //Se o nó não tiver pai
+                raiz = null; //se for a raiz, define ela como nula
+            }
+        }
+
+        // se for no com 1 filho
+        else if (atual.getEsq() == null ){
+            if (pai != null) {
+                if (pai.getEsq() == atual) {
+                    pai.setEsq(atual.getDir());
+                } else {
+                    pai.setDir(atual.getDir());
+                }
+            } else {
+                raiz = atual.getDir();
+            }
+        } else if (atual.getDir() == null) {
+            if (pai !=null) {
+                if (pai.getEsq() == atual){
+                    pai.setEsq(atual.getEsq());
+                } else {
+                    pai.setDir(atual.getEsq());
+                }
+            } else {
+                raiz = atual.getEsq();
+            }
+        }
+
+        // se for no com 2 filhos
+        else {
             No sucessor = atual.getDir();
-
-            while(sucessor.getEsq()!= null){
+            No paiSucessor = atual;
+            while (sucessor.getEsq() != null) {
                 paiSucessor = sucessor;
                 sucessor = sucessor.getEsq();
             }
-            if (sucessor != atual.getDir()){
+
+            atual.setValor(sucessor.getValor());
+
+            if (paiSucessor.getEsq() == sucessor) {
                 paiSucessor.setEsq(sucessor.getDir());
-                sucessor.setDir(atual.getDir());
-            }
-
-            sucessor.setEsq(atual.getEsq());
-            return sucessor;
-        }
-    }
-
-    public boolean remover(int valor) {
-        No atual = this.raiz;
-        No pai = null;
-
-        while (atual != null) {
-            if (valor == atual.getValor()) {
-                if (atual == this.raiz) {
-                    this.raiz = removerAtual(atual);
-                } else {
-                    if (pai.getDir() == atual) {
-                        pai.setDir(removerAtual(atual));
-                    } else {
-                        pai.setEsq(removerAtual(atual));
-                    }
-                }
-                return true;
-            }
-
-            pai = atual;
-            if (valor > atual.getValor()) {
-                atual = atual.getDir();
             } else {
-                atual = atual.getEsq();
+                paiSucessor.setDir(null);
             }
         }
+        return atual;
 
-        return false;
     }
+
 }

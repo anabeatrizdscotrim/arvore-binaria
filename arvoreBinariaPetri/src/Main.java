@@ -14,7 +14,7 @@ public class Main {
         System.out.println();
 
         System.out.println("Remover 87");
-        arvoreBinaria.remover(72);
+        arvoreBinaria.remover(80);
 
         System.out.println("ordem depois da remoção");
         arvoreBinaria.emOrdem(arvoreBinaria.getRaiz());
